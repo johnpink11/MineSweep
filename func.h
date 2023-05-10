@@ -6,9 +6,9 @@ void initset(char * board);//初始化棋盘
 void initset_dis(char * dis_board);//初始化展示棋盘
 void displayBoard(char * board);//展示棋盘
 void start_menu();//输出菜单
-void start_menu2();
-void DIY_menu();
-void normal_menu();
+void start_menu2();//输出菜单2
+void DIY_menu();//自定义模式菜单
+void normal_menu();//普通模式菜单
 void gameover();
 void calcBoard(int row, int col, char * board);//执行埋雷操作
 void setBomb(char * board, int bombnum);//随机生成雷
