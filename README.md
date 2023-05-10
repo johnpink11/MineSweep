@@ -4,3 +4,6 @@
 
 Welcome to my project!
 I am still updating this project.
+
+# How to bury a mine?
+
