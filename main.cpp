@@ -1,3 +1,5 @@
+// main.cpp -- main flame of game 
+// vesion 2.0
 #include <iostream>
 #include <ctime>
 #include "func.h"

@@ -1,4 +1,5 @@
-
+// func.cpp -- implementing functions 
+// vesion 2.0
 #include <iostream>
 #include <cstdlib>
 #include <iomanip>

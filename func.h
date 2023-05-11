@@ -1,3 +1,4 @@
+// func.h -- statement of functions and static ver
 #include <vector>
 static int ROW = 9, COL = 9; //д╛хон╙9*9
 
