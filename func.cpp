@@ -51,27 +51,15 @@ void displayBoard(char *board)
     std::cout << '\n';
 }
 
-void start_menu()
-{
-    using namespace std;
-    cout << "\t      扫雷游戏\n";
-    cout << "\
-***********************************\n\
-*          1.开始游戏             *\n\
-*          2.结束游戏             *\n\
-***********************************\n\
-";
-    cout << "请输入你的选择：";
-}
 
-void start_menu2() {
+void start_menu() {
     using namespace std;
     cout << "\t      扫雷游戏\n";
     cout << "\
 ***********************************\n\
 *          1.自定义模式           *\n\
 *          2.普通模式             *\n\
-*          3.返回上一级           *\n\
+*          3.结束游戏             *\n\
 ***********************************\n\
 ";
     cout << "请输入你的选择：";
@@ -149,14 +137,11 @@ void trriger(char *board, char *dis_board, int row, int col) // 传入行数和列数-1
     if (dis_board[row * COL + col] != ' ' && !(dis_board[row * COL + col] >= '1' && dis_board[row * COL + col] <= '8')) // 如果不是空格和数字
     {
         char elem = board[row * COL + col];
+        if(elem == '#')
+            return;
         if (elem >= '1' && elem <= '8')
         {
             dis_board[row * COL + col] = elem;
-            return;
-        }
-        if (elem == '#')
-        {
-            cout << "踩雷了:(" << endl;
             return;
         }
         if (elem == '0')
@@ -199,12 +184,10 @@ void setboard(char *&board, char *&dis_board)
 
 void resetBoard(char *&board, char *&dis_board)
 {
-    char *p1 = new char[ROW * COL];
-    char *p2 = new char[ROW * COL];
     delete[] board;
     delete[] dis_board;
-    board = p1;
-    dis_board = p2;
+    board = new char[ROW * COL];
+    dis_board = new char[ROW * COL];
     initset(board);
     initset_dis(dis_board);
 }
@@ -256,7 +239,7 @@ bool placeMine(char *board)
     return true;
 }
 
-int setDifficult(char *&board, char *&dis_board)
+void setDifficult(char *&board, char *&dis_board)
 {
     int difficulty;
 
@@ -265,25 +248,27 @@ int setDifficult(char *&board, char *&dis_board)
     cout << "2 - 中等\n";
     cout << "3 - 困难\n";
 
-    cin >> difficulty;
+    while(cin >> difficulty && !(difficulty == 1 || difficulty == 2 || difficulty == 3))
+        cout << "输入有误，请重新输入。";
     switch (difficulty)
     {
     case 1:
         ROW = COL = 9;
         resetBoard(board, dis_board);
-        return 3;
+        setBomb(board, Eazy);
+        return;
     case 2:
         ROW = COL = 16;
         resetBoard(board, dis_board);
-        return 5;
+        setBomb(board, Middle);
+        return;
     case 3:
         ROW = 16;
         COL = 30;
         resetBoard(board, dis_board);
-        return 7;
-    default:
-        throw "无效难度";
+        setBomb(board, Hard);
+        return;
     }
-    return difficulty;
+    return;
 }
 

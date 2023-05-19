@@ -1,5 +1,5 @@
-// main.cpp -- main flame of game 
-// vesion 2.0
+// main.cpp -- main flame of game
+// vesion 3.0
 #include <iostream>
 #include <ctime>
 #include "func.h"
@@ -7,149 +7,110 @@
 int main()
 {
     using namespace std;
-restart:
     srand((unsigned int)time(NULL));
-    int difficult = 3;
-    char *board = new char[ROW * COL];
-    char *dis_board = new char[ROW * COL];
-    initset(board);
-    initset_dis(dis_board);
-    // displayBoard(board);
-    // displayBoard(dis_board);
-start:
-    start_menu(); // 开始菜单
-    char choice1;
-    while (cin >> choice1 && !(choice1 >= '1' && choice1 <= '5'))
-        ;
-    switch (choice1)
+    while (true)
     {
-    case '1':
-        goto start2;
-        break;
-    case '2':
-        cout << "谢谢游玩！ " << endl;
-        exit(0);
-    default:
-        goto start;
+        char *board = new char[ROW * COL];
+        char *dis_board = new char[ROW * COL];
+        initset(board);
+        initset_dis(dis_board);
+        setBomb(board, Eazy);
+        start_menu(); // 开始菜单
+        char choice;
+        while (cin >> choice && !(choice >= '1' && choice <= '3')) // 进行模式选择
+            cout << "输入有误，请重新输入。" << endl;
+        if (choice == '1') // 进入自定义模式
+        {
+            Choice0:
+            DIY_menu();
+            char choice;
+            while (cin >> choice && !(choice >= '1' && choice <= '4'))
+                cout << "输入有误，请重新输入。" << endl;
+            if (choice == '1') // 设置棋盘
+            {
+                setboard(board, dis_board);
+                goto Choice0;
+            }
+            else if (choice == '2') // 埋雷
+            {
+                resetBoard(board, dis_board);
+                placeMine(board);
+                goto Choice0;
+            }
+            // else if (choice == '3') // 开始游戏
+            //     break;
+            else if (choice == '4') // 重新选择 注意重置棋盘数据
+            {
+                delete[] board;
+                delete[] dis_board;
+                continue;
+            }
+        }
+        else if (choice == '2') // 进入普通模式
+        {
+            Choice1:
+            normal_menu();
+            char choice;
+            while (cin >> choice && !(choice >= '1' && choice <= '3'))
+                cout << "输入有误，请重新输入。" << endl;
+            if (choice == '1') // 设置难度
+            {
+                setDifficult(board, dis_board);
+                goto Choice1;
+            }
+            // else if (choice == '2') // 开始游戏
+            //     break;
+            else if (choice == '3') // 重新选择 注意重置棋盘数据
+            {
+                delete[] board;
+                delete[] dis_board;
+                continue;
+            }
+        }
+        else if (choice == '3')
+        {
+            cout << "谢谢游玩！" << endl;
+            exit(0);
+        }
+    // 以下是开始游戏的代码
+    while(true)
+    {
+        displayBoard(dis_board);
+        int row, col;
+        cout << "请输入你选择的坐标行列： ";
+        cin >> row >> col;
+        if(row < 1 || row > ROW || col < 1 || col > COL)
+        {
+            cout << "输入坐标有误，请重新输入！";
+            cout << "请输入你选择的坐标行列： \n";
+            continue;
+        }
+        char elem = board[(row - 1) * COL + col - 1];
+        if(elem ==  '#')
+        {
+            cout << "踩雷了:(" << endl;
+            break;
+        }
+        else
+        {
+            trriger(board, dis_board, row - 1, col - 1);
+            if(checkWin(board, dis_board))
+            {
+                break;
+            }
+            continue;
+        }
+    }
+    cout << "重新开始？(Y/N)";
+    char if_restart;
+    cin >> if_restart;
+    if(if_restart == 'Y'|| if_restart == 'y')
+        continue;
+    else
+    {
+        cout << "谢谢游玩！" << endl;
         break;
     }
-        goto start;
-start2:
-    start_menu2();
-    char choice2;
-    while (cin >> choice2 && !(choice2 >= '1' && choice2 <= '5'))
-            ;
-    switch (choice2)
-        {
-        case '1':
-            goto DIY;
-        case '2':
-            goto normal;
-        case '3':
-            goto start;
-        default:
-            goto start2;
-            break;
-        }
-        goto start2;
-DIY:
-        DIY_menu();
-        char choice3;
-        while (cin >> choice3 && !(choice3 >= '1' && choice3 <= '5'))
-            ;
-        switch (choice3)
-        {
-        case '1':
-            setboard(board, dis_board);
-            displayBoard(board);
-            goto DIY;
-        case '2':
-            placeMine(board);
-            goto DIY;
-        case '3':
-            while (true)
-            {
-                // system("cls");
-                displayBoard(dis_board);
-                int x, y;
-                cout << "请输入你选择的行和列： ";
-                while (!(cin >> x >> y)) {};
-                trriger(board, dis_board, x - 1, y - 1);
-                displayBoard(board);
-                if (board[(x - 1) * COL + y - 1] == '#')
-                {
-                    cout << "很遗憾，踩雷了:(" << endl;
-                    goto end;
-                }
-                if (checkWin(board, dis_board))
-                    goto end;
-            }
-        case '4':
-            goto restart;
-        default:
-            goto DIY;
-            break;
-        }
-normal:
-        normal_menu();
-        char choice4;
-        while (cin >> choice4 && !(choice4 >= '1' && choice4 <= '5'))
-            ;
-        switch (choice4)
-        {
-        case '1':
-            difficult = setDifficult(board, dis_board);
-            if (difficult == 3)
-                setBomb(board, 10);
-            if (difficult == 5)
-                setBomb(board, 40);
-            if (difficult == 7)
-                setBomb(board, 99);
-            goto normal;
-        case '2':
-            while (true)
-            {
-                // system("cls");
-                displayBoard(dis_board);
-                int x, y;
-                cout << "请输入你选择的行和列： ";
-                while (!(cin >> x >> y)) {};
-                if (x > ROW || y > COL || x < 1 || y < 1)
-                {
-                    cout << "请输入边界内的坐标！\n";
-                    continue;
-                }
-                else {
-                    trriger(board, dis_board, x - 1, y - 1);
-                    displayBoard(board);
-                    if (board[(x - 1) * COL + y - 1] == '#')
-                    {
-                        cout << "很遗憾，踩雷了:(" << endl;
-                        goto end;
-                    }
-                    if (checkWin(board, dis_board))
-                        goto end;
-                }
-            }
-        case '3':
-            goto restart;
-        default:
-            goto normal;
-            break;
-        }
-
-   
-end:
-    delete[] board;
-    delete[] dis_board;
-    cout << "重新开始？(Y/N)" << endl;
-    char end_chr;
-    do
-    {
-        cin.get(end_chr);
-    }while (end_chr == '\n');
-    if(end_chr == 'Y' || end_chr == 'y')
-        goto restart;
-    cout << "谢谢游玩！" << endl;
+    }
     return 0;
 }
