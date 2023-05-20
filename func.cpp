@@ -194,14 +194,13 @@ void resetBoard(char *&board, char *&dis_board)
 
 bool checkWin(char *board, char *dis_board)
 {
-    for (int i = 0; i < ROW * COL - 1; i++)
+    for (int i = 0; i < ROW * COL; i++)
     {
         if (board[i] != '#' && dis_board[i] == '*')
         {
             return false;
         }
     }
-    cout << "¹§Ï²Äã£¬ÓÎÏ·Ê¤Àû£¡" << endl;
     return true;
 }
 
@@ -272,3 +271,12 @@ void setDifficult(char *&board, char *&dis_board)
     return;
 }
 
+void gameover_dis(char * board, char * dis_board)
+{
+    for(int i = 0; i < ROW * COL; i++)
+    {
+        if(board[i] == '#')
+            dis_board[i] = '#';
+    }
+    displayBoard(dis_board);
+}

@@ -10,7 +10,7 @@ void displayBoard(char * board);//展示棋盘
 void start_menu();//输出菜单
 void DIY_menu();//自定义模式菜单
 void normal_menu();//普通模式菜单
-void gameover();//游戏结束
+void gameover_dis(char * board, char * dis_board);//游戏结束棋盘 在现有棋盘的基础上展示所有的雷
 void calcBoard(int row, int col, char * board);//执行埋雷操作
 void setBomb(char * board, int bombnum);//随机生成雷
 void trriger(char * board,char * dis_board, int row, int col);//玩

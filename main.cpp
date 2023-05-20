@@ -21,7 +21,7 @@ int main()
             cout << "输入有误，请重新输入。" << endl;
         if (choice == '1') // 进入自定义模式
         {
-            Choice0:
+        Choice0:
             DIY_menu();
             char choice;
             while (cin >> choice && !(choice >= '1' && choice <= '4'))
@@ -48,7 +48,7 @@ int main()
         }
         else if (choice == '2') // 进入普通模式
         {
-            Choice1:
+        Choice1:
             normal_menu();
             char choice;
             while (cin >> choice && !(choice >= '1' && choice <= '3'))
@@ -72,45 +72,49 @@ int main()
             cout << "谢谢游玩！" << endl;
             exit(0);
         }
-    // 以下是开始游戏的代码
-    while(true)
-    {
-        displayBoard(dis_board);
-        int row, col;
-        cout << "请输入你选择的坐标行列： ";
-        cin >> row >> col;
-        if(row < 1 || row > ROW || col < 1 || col > COL)
+        // 以下是开始游戏的代码
+        while (true)
         {
-            cout << "输入坐标有误，请重新输入！";
-            cout << "请输入你选择的坐标行列： \n";
-            continue;
-        }
-        char elem = board[(row - 1) * COL + col - 1];
-        if(elem ==  '#')
-        {
-            cout << "踩雷了:(" << endl;
-            break;
-        }
-        else
-        {
-            trriger(board, dis_board, row - 1, col - 1);
-            if(checkWin(board, dis_board))
+            displayBoard(dis_board);
+            int row, col;
+            cout << "请输入你选择的坐标行列： ";
+            cin >> row >> col;
+            if (row < 1 || row > ROW || col < 1 || col > COL)
             {
+                cout << "输入坐标有误，请重新输入！";
+                cout << "请输入你选择的坐标行列： \n";
+                continue;
+            }
+            char elem = board[(row - 1) * COL + col - 1];
+            if (elem == '#')
+            {
+                gameover_dis(board, dis_board);
+                cout << "踩雷了:(" << endl;
                 break;
             }
+            else
+            {
+                trriger(board, dis_board, row - 1, col - 1);
+                if (checkWin(board, dis_board))
+                {
+                    displayBoard(dis_board);
+                    cout << "恭喜你，游戏胜利！" << endl;
+                    break;
+                }
+                continue;
+            }
+        }
+        cout << "重新开始？(Y/N)";
+        char if_restart;
+        cin >> if_restart;
+        if(if_restart == 'Y'|| if_restart == 'y')
+        {
+            delete[] board;
+            delete[] dis_board;
             continue;
         }
-    }
-    cout << "重新开始？(Y/N)";
-    char if_restart;
-    cin >> if_restart;
-    if(if_restart == 'Y'|| if_restart == 'y')
-        continue;
-    else
-    {
         cout << "谢谢游玩！" << endl;
         break;
-    }
     }
     return 0;
 }
